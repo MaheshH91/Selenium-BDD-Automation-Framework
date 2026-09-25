@@ -25,13 +25,23 @@ public class SuiteListener implements ISuiteListener {
     }
 
     private void openCucumberReport() {
+    	// 1. Detect if running inside Jenkins or any CI runner
+        boolean isCI = System.getenv("JENKINS_HOME") != null 
+                    || System.getenv("CI") != null 
+                    || Boolean.parseBoolean(System.getProperty("headless", "false"));
+
+        if (isCI) {
+            logger.info("CI/Headless environment detected (Jenkins). Skipping desktop report auto-launch; report is archived by pipeline.");
+            return;
+        }
+
+        // 2. Standard local desktop verification
         try {
             if (GraphicsEnvironment.isHeadless() || !Desktop.isDesktopSupported()) {
-                logger.info("Headless environment detected; skipping auto-launch.");
+                logger.info("No desktop environment supported; skipping report launch.");
                 return;
             }
 
-            // Path to the Extent Cucumber BDD report
             String cucumberReportPath = Paths.get(System.getProperty("user.dir"), "reports", "ExtentCucumberReport.html").toString();
             File reportFile = new File(cucumberReportPath);
 
