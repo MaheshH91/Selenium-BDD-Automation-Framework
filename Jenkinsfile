@@ -40,15 +40,40 @@ pipeline {
 
     post {
         always {
+          // 1. Publish Extent BDD Cucumber Report
             publishHTML(target: [
-                allowMissing: false,
+                allowMissing: true,
                 alwaysLinkToLastBuild: true,
                 keepAll: true,
                 reportDir: 'reports',
                 reportFiles: 'ExtentCucumberReport.html',
-                reportName: 'Extent BDD Execution Report'
+                reportName: 'Extent BDD Report'
             ])
 
+            // 2. Publish Standard TestNG HTML Report
+            publishHTML(target: [
+                allowMissing: true,
+                alwaysLinkToLastBuild: true,
+                keepAll: true,
+                reportDir: 'target/surefire-reports',
+                reportFiles: 'emailable-report.html',
+                reportName: 'TestNG Emailable Report'
+            ])
+
+            // 3. Publish TestNG Full Index Report
+            publishHTML(target: [
+                allowMissing: true,
+                alwaysLinkToLastBuild: true,
+                keepAll: true,
+                reportDir: 'target/surefire-reports',
+                reportFiles: 'index.html',
+                reportName: 'TestNG Suite Report'
+            ])
+
+            // 4. Archive Artifacts for direct download
+            archiveArtifacts artifacts: 'reports/**, target/surefire-reports/**', allowEmptyArchive: true
+
+            // 5. TestNG JUnit Trend Graph
             junit testResults: 'target/surefire-reports/*.xml', allowEmptyResults: true
         }
     }
