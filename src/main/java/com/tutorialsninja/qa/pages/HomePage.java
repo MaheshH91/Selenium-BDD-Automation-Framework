@@ -1,7 +1,5 @@
 package com.tutorialsninja.qa.pages;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -32,7 +30,7 @@ public class HomePage extends BasePage {
             click(myAccountDropMenu);
             click(loginOption);
         } catch (Exception e) {
-            // Robust CI Headless Fallback: Use direct navigation if UI dropdown fails
+            // CI Headless Fallback: direct navigation prevents Bootstrap dropdown timeout
             driver.get("https://tutorialsninja.com/demo/index.php?route=account/login");
         }
         return new LoginPage(driver);
@@ -43,16 +41,21 @@ public class HomePage extends BasePage {
             click(myAccountDropMenu);
             click(registerOption);
         } catch (Exception e) {
-            // Robust CI Headless Fallback: Use direct navigation if UI dropdown fails
+            // CI Headless Fallback: direct navigation prevents Bootstrap dropdown timeout
             driver.get("https://tutorialsninja.com/demo/index.php?route=account/register");
         }
         return new RegisterPage(driver);
     }
 
-    public SearchPage searchForAProduct(String productName) {
+    public SearchPage searchProduct(String productName) {
         type(searchBoxField, productName);
         click(searchButton);
         return new SearchPage(driver);
+    }
+
+    // Alias to maintain backwards compatibility
+    public SearchPage searchForAProduct(String productName) {
+        return searchProduct(productName);
     }
 
     public SearchPage clickSearchButton() {
