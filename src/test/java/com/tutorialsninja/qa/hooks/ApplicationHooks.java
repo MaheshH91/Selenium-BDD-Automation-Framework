@@ -7,6 +7,7 @@ import com.tutorialsninja.qa.drivers.DriverManager;
 import com.tutorialsninja.qa.utils.ConfigReader;
 
 import io.cucumber.java.After;
+import io.cucumber.java.AfterStep;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
 
@@ -35,7 +36,23 @@ public class ApplicationHooks {
 
         logger.info("Executing Scenario: [{}] on Browser: [{}]", scenario.getName(), browser);
     }
+ // Runs only for scenarios annotated with @Smoke
+    @Before(value = "@Smoke", order = 1)
+    public void beforeSmoke(Scenario scenario) {
+        logger.info("Starting priority execution for Smoke Scenario: {}", scenario.getName());
+    }
 
+    // Step-level Hook: Triggers immediately after every step inside tagged scenarios
+    @AfterStep
+    public void takeStepScreenshot(Scenario scenario) {
+        if (scenario.isFailed()) {
+            WebDriver driver = DriverManager.getDriver();
+            if (driver != null) {
+                byte[] screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+                scenario.attach(screenshot, "image/png", "Step_Failure_Evidence");
+            }
+        }
+    }
     @After(order = 1)
     public void tearDownWithScreenshot(Scenario scenario) {
         if (scenario.isFailed()) {

@@ -1,0 +1,21 @@
+{
+  "validUsers": [
+    {
+      "email": "maheshpatil234@gmail.com",
+      "password": "12345",
+      "description": "Standard user"
+    },
+    {
+      "email": "mahesh.jadhav@aressindia.net",
+      "password": "123456789",
+      "description": "Admin user"
+    }
+  ],
+  "invalidUsers": [
+    {
+      "email": "invalid_user999@test.com",
+      "password": "wrongpassword123",
+      "expectedError": "Warning: No match for E-Mail Address and/or Password."
+    }
+  ]
+}
