@@ -1,15 +1,25 @@
-package com.tutorialsninja.qa.stepdefinitions;
+package com.tutorialsninja.qa.stepdefinition;
 
 import org.testng.Assert;
-import com.tutorialsninja.qa.drivers.DriverManager;
-import com.tutorialsninja.qa.pages.HomePage;
-import com.tutorialsninja.qa.pages.SearchPage;
-import io.cucumber.java.en.*;
 
-public class SearchSteps {
+import com.tutorialsninja.qa.context.TestContext;
+import com.tutorialsninja.qa.driver.DriverManager;
+import com.tutorialsninja.qa.page.HomePage;
+import com.tutorialsninja.qa.page.SearchPage;
+
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
+
+public class SearchStepDefinitions {
 
     private HomePage homePage;
     private SearchPage searchPage;
+    private final TestContext context;
+
+    public SearchStepDefinitions(TestContext context) {
+        this.context = context;
+    }
 
     @Given("User is on the Home page")
     public void user_is_on_the_home_page() {
@@ -22,8 +32,9 @@ public class SearchSteps {
     }
 
     @Then("Product {string} should be displayed in the search results")
-    public void product_should_be_displayed_in_the_search_results(String string) {
-        Assert.assertTrue(searchPage.displayStatusOfHPValidProduct(), "Expected product not displayed.");
+    public void product_should_be_displayed_in_the_search_results(String productName) {
+        Assert.assertTrue(searchPage.displayStatusOfHPValidProduct(), 
+                "Expected product '" + productName + "' is not displayed in search results.");
     }
 
     @When("User searches for invalid product {string}")
@@ -33,7 +44,8 @@ public class SearchSteps {
 
     @Then("Search result should display message {string}")
     public void search_result_should_display_message(String expectedMessage) {
-        Assert.assertEquals(searchPage.retrieveNoProductMessageText(), expectedMessage);
+        Assert.assertEquals(searchPage.retrieveNoProductMessageText(), expectedMessage,
+                "Search result message does not match expected text.");
     }
 
     @When("User clicks on the search button without product text")

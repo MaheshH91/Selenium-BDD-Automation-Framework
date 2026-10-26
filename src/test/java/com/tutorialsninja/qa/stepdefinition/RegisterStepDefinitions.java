@@ -1,26 +1,29 @@
-package com.tutorialsninja.qa.stepdefinitions;
-
-import java.util.List;
-import java.util.Map;
+package com.tutorialsninja.qa.stepdefinition;
 
 import org.testng.Assert;
 
-import com.tutorialsninja.qa.drivers.DriverManager;
-import com.tutorialsninja.qa.pages.AccountSuccessPage;
-import com.tutorialsninja.qa.pages.HomePage;
-import com.tutorialsninja.qa.pages.RegisterPage;
-import com.tutorialsninja.qa.utils.ConfigReader;
-import com.tutorialsninja.qa.utils.DataUtils;
+import com.tutorialsninja.qa.context.TestContext;
+import com.tutorialsninja.qa.driver.DriverManager;
+import com.tutorialsninja.qa.page.AccountSuccessPage;
+import com.tutorialsninja.qa.page.HomePage;
+import com.tutorialsninja.qa.page.RegisterPage;
+import com.tutorialsninja.qa.stepdefinition.DataTableTypeConfig.UserProfile;
+import com.tutorialsninja.qa.util.ConfigReader;
+import com.tutorialsninja.qa.util.DataUtils;
 
-import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
-public class RegisterSteps {
+public class RegisterStepDefinitions {
 
     private RegisterPage registerPage;
     private AccountSuccessPage successPage;
+    private final TestContext context;
+
+    public RegisterStepDefinitions(TestContext context) {
+        this.context = context;
+    }
 
     @Given("User is on the Register page")
     public void user_is_on_the_register_page() {
@@ -40,31 +43,31 @@ public class RegisterSteps {
     }
 
     @When("User registers with the following user profile:")
-    public void user_registers_with_the_following_user_profile(DataTable dataTable) {
-        List<Map<String, String>> data = dataTable.asMaps(String.class, String.class);
-        Map<String, String> user = data.get(0);
+    public void user_registers_with_the_following_user_profile(UserProfile user) {
+        String uniqueEmail = DataUtils.generateUniqueEmail();
 
-        if ("yes".equalsIgnoreCase(user.get("subscribeNewsletter"))) {
+        if (user.subscribeNewsletter()) {
             successPage = registerPage.registerFull(
-                    user.get("firstName"),
-                    user.get("lastName"),
-                    DataUtils.generateUniqueEmail(),
-                    user.get("telephone"),
-                    user.get("password")
+                    user.firstName(),
+                    user.lastName(),
+                    uniqueEmail,
+                    user.telephone(),
+                    user.password()
             );
         } else {
             successPage = registerPage.registerMandatory(
-                    user.get("firstName"),
-                    user.get("lastName"),
-                    DataUtils.generateUniqueEmail(),
-                    user.get("telephone"),
-                    user.get("password")
+                    user.firstName(),
+                    user.lastName(),
+                    uniqueEmail,
+                    user.telephone(),
+                    user.password()
             );
         }
     }
 
     @Then("Account success page should display {string}")
     public void account_success_page_should_display(String expectedHeading) {
+        Assert.assertNotNull(successPage, "AccountSuccessPage instance is null.");
         Assert.assertEquals(successPage.getAccountSuccessHeading(), expectedHeading);
     }
 

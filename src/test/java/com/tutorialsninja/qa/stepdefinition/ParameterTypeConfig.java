@@ -1,4 +1,4 @@
-package com.tutorialsninja.qa.stepdefinitions;
+package com.tutorialsninja.qa.stepdefinition;
 
 
 import io.cucumber.java.ParameterType;
