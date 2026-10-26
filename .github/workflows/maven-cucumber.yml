@@ -109,8 +109,6 @@ jobs:
             </html>
           attachments: |
             reports/ExtentCucumberReport.html
-<<<<<<< HEAD
+
             target/surefire-reports/emailable-report.html
-=======
             target/surefire-reports/emailable-report.html
->>>>>>> e16b886 (ci(github-actions): fix yaml indentation and add artifact archiving)
