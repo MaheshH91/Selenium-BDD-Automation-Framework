@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
     <Properties>
-        <Property name="LOG_DIR">logs</Property>
-        <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n</Property>
+        <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Property>
+        <Property name="BASE_PATH">logs</Property>
     </Properties>
 
     <Appenders>
+        <!-- Console Appender -->
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="${LOG_PATTERN}"/>
         </Console>
 
-        <RollingFile name="FileAppender" fileName="${LOG_DIR}/automation.log"
-                     filePattern="${LOG_DIR}/automation-%d{yyyy-MM-dd}-%i.log.gz">
+        <!-- Rolling File Appender -->
+        <RollingFile name="RollingFile"
+                     fileName="${BASE_PATH}/automation.log"
+                     filePattern="${BASE_PATH}/automation-%d{yyyy-MM-dd}-%i.log.gz">
             <PatternLayout pattern="${LOG_PATTERN}"/>
             <Policies>
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
@@ -22,13 +25,21 @@
     </Appenders>
 
     <Loggers>
-        <Logger name="com.tutorialsninja" level="info" additivity="false">
+        <!-- Framework-specific logging -->
+        <Logger name="com.tutorialsninja.qa" level="INFO" additivity="false">
             <AppenderRef ref="Console"/>
-            <AppenderRef ref="FileAppender"/>
+            <AppenderRef ref="RollingFile"/>
         </Logger>
-        <Root level="warn">
+
+        <!-- Suppress overly verbose third-party log noise -->
+        <Logger name="org.apache.poi" level="ERROR"/>
+        <Logger name="io.cucumber" level="WARN"/>
+        <Logger name="org.testng" level="WARN"/>
+
+        <!-- Root Logger -->
+        <Root level="INFO">
             <AppenderRef ref="Console"/>
-            <AppenderRef ref="FileAppender"/>
+            <AppenderRef ref="RollingFile"/>
         </Root>
     </Loggers>
 </Configuration>

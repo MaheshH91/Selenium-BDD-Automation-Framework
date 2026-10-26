@@ -1,16 +1,12 @@
-package com.tutorialsninja.qa.hooks;
-
+package com.tutorialsninja.qa.hook;
 
 import java.time.Duration;
-
-import com.tutorialsninja.qa.drivers.DriverManager;
-import com.tutorialsninja.qa.utils.ConfigReader;
-
+import com.tutorialsninja.qa.driver.DriverManager;
+import com.tutorialsninja.qa.util.ConfigReader;
 import io.cucumber.java.After;
 import io.cucumber.java.AfterStep;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.OutputType;
@@ -36,13 +32,12 @@ public class ApplicationHooks {
 
         logger.info("Executing Scenario: [{}] on Browser: [{}]", scenario.getName(), browser);
     }
- // Runs only for scenarios annotated with @Smoke
+
     @Before(value = "@Smoke", order = 1)
     public void beforeSmoke(Scenario scenario) {
         logger.info("Starting priority execution for Smoke Scenario: {}", scenario.getName());
     }
 
-    // Step-level Hook: Triggers immediately after every step inside tagged scenarios
     @AfterStep
     public void takeStepScreenshot(Scenario scenario) {
         if (scenario.isFailed()) {
@@ -53,6 +48,7 @@ public class ApplicationHooks {
             }
         }
     }
+
     @After(order = 1)
     public void tearDownWithScreenshot(Scenario scenario) {
         if (scenario.isFailed()) {
