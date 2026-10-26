@@ -118,7 +118,7 @@ Selenium-BDD-Automation-Framework/
 │       │                   └── ExtentReportManager.java
 │       └── resources/
 │           ├── config/
-│           │   ├─�� config.properties
+│           │   ├── config.properties
 │           │   └── testdata.properties
 │           ├── features/
 │           │   ├── Login.feature
@@ -380,7 +380,11 @@ Update this section according to the license used by the repository.
 
 Software QA Engineer | Selenium | Cucumber | TestNG | Maven | Jenkins
 
+## Author & Profiles
+
+- **GitHub Profile:** [MaheshH91](https://github.com/MaheshH91)
+- **LinkedIn Profile:** [Mahesh Holkar](https://www.linkedin.com/in/maheshholkarqaengineer/)
+
 ---
 
 This framework provides a scalable foundation for BDD-based Selenium automation with clean Page Object architecture, thread-safe execution, multiple data-driven approaches, and CI-friendly execution workflows.
-
