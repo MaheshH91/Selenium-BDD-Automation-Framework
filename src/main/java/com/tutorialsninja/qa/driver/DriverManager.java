@@ -1,8 +1,7 @@
-package com.tutorialsninja.qa.context;
+package com.tutorialsninja.qa.driver;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -23,8 +22,7 @@ public final class DriverManager {
     }
 
     public static void setDriver(String browserName, boolean isHeadless) {
-        WebDriver driver;
-        switch (browserName.toLowerCase().trim()) {
+        WebDriver driver = switch (browserName.toLowerCase().trim()) {
             case "firefox" -> {
                 FirefoxOptions options = new FirefoxOptions();
                 if (isHeadless) {
@@ -32,7 +30,7 @@ public final class DriverManager {
                     options.addArguments("--width=1920");
                     options.addArguments("--height=1080");
                 }
-                driver = new FirefoxDriver(options);
+                yield new FirefoxDriver(options);
             }
             case "edge" -> {
                 EdgeOptions options = new EdgeOptions();
@@ -40,7 +38,7 @@ public final class DriverManager {
                     options.addArguments("--headless=new");
                     options.addArguments("--window-size=1920,1080");
                 }
-                driver = new EdgeDriver(options);
+                yield new EdgeDriver(options);
             }
             case "chrome" -> {
                 ChromeOptions options = new ChromeOptions();
@@ -50,7 +48,6 @@ public final class DriverManager {
                 options.addArguments("--disable-gpu");
                 options.setPageLoadStrategy(PageLoadStrategy.NORMAL);
 
-                // Anti-detection & performance flags
                 Map<String, Object> prefs = new HashMap<>();
                 prefs.put("credentials_enable_service", false);
                 prefs.put("profile.password_manager_enabled", false);
@@ -58,13 +55,13 @@ public final class DriverManager {
 
                 if (isHeadless) {
                     options.addArguments("--headless=new");
-                    // Force desktop dimensions so mobile responsive mode is never triggered
                     options.addArguments("--window-size=1920,1080");
                 }
-                driver = new ChromeDriver(options);
+                yield new ChromeDriver(options);
             }
             default -> throw new IllegalArgumentException("Unsupported browser: " + browserName);
-        }
+        };
+
         DRIVER_THREAD.set(driver);
     }
 
