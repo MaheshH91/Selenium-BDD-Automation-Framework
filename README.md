@@ -4,7 +4,7 @@
 ![Maven](https://img.shields.io/badge/Maven-3.x-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white)![Selenium](https://img.shields.io/badge/Selenium-4.51.0-43B02A?style=for-the-badge&logo=selenium&logoColor=white)![Cucumber](https://img.shields.io/badge/Cucumber-7.34.9-23D18B?style=for-the-badge&logo=cucumber&logoColor=white)
 ![TestNG](https://img.shields.io/badge/TestNG-7.10.2-FFB703?style=for-the-badge&logo=testng&logoColor=white)![Jenkins](https://img.shields.io/badge/Jenkins-CI%2FCD-D24939?style=for-the-badge&logo=jenkins&logoColor=white)![Browsers](https://img.shields.io/badge/Browsers-Chrome%20%7C%20Firefox%20%7C%20Edge-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white)
 
-An enterprise-grade end-to-end test automation framework for scalable web application testing, built with Java 21, Selenium WebDriver, Cucumber BDD, TestNG, and Maven.
+An enterprise-grade end-to-end test automation framework for scalable web application testing, built with Java 25, Selenium WebDriver, Cucumber BDD, TestNG, and Maven.
 
 This framework is designed for maintainability, scalability, parallel execution, data-driven testing, reusable Page Objects, automated failure evidence, and CI/CD integration.
 
@@ -49,21 +49,21 @@ The architecture is designed to support multiple browsers, environment-specific 
 
 ## Tech Stack
 
-| Technology | Version / Details |
-| --- | --- |
-| Java | 21 |
-| Selenium WebDriver | 4.49.0 |
-| Cucumber Java | 7.34.9 |
-| Cucumber TestNG | 7.34.9 |
-| TestNG | 7.10.2 |
-| PicoContainer | Dependency Injection |
-| Apache Maven | Build & dependency management |
-| Apache POI | 5.2.5 |
-| Jackson Databind | 2.17.0 |
-| ExtentReports Adapter | 1.14.0 |
-| Log4j2 | 2.20.0 |
-| CI/CD | Jenkins |
-| Browsers | Chrome, Firefox, Edge |
+| Technology         | Version / Details             |
+| ---                | ---                           |
+| Java               | 25                            |
+| Selenium WebDriver | 4.49.0                        |
+| Cucumber Java      | 7.34.9                        |
+| Cucumber TestNG    | 7.34.9                        |
+| TestNG             | 7.10.2                        |
+| PicoContainer      | Dependency Injection          |
+| Apache Maven       | Build & dependency management |
+| Apache POI         | 5.2.5                         |
+| Jackson Databind   | 2.17.0                        |
+| ExtentReports Adapter | 1.14.0                     |
+| Log4j2             | 2.20.0                        |
+| CI/CD              | Jenkins                       |
+| Browsers           | Chrome, Firefox, Edge         |
 
 ## Key Features
 
