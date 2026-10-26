@@ -386,7 +386,7 @@ Update this section according to the license used by the repository.
 
 **Mahesh Holkar**
 
-Software QA Engineer | Selenium | Cucumber | TestNG | Maven | Jenkins
+SDET | Senior Automation Test Engineer SDET | Selenium | Cucumber | TestNG | Maven | Jenkins
 
 ## Author & Profiles
 
