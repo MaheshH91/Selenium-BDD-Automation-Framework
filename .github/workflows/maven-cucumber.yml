@@ -1,0 +1,111 @@
+name: Selenium BDD Automation CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+    inputs:
+      cucumber_tags:
+        description: 'Cucumber tags expression (e.g. @Smoke, @Regression)'
+        required: false
+        default: '@Regression'
+      browser:
+        description: 'Browser for execution'
+        required: false
+        default: 'chrome'
+        type: choice
+        options:
+          - chrome
+          - firefox
+          - edge
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Compile Test Project
+        run: mvn clean test-compile -DargLine="--enable-native-access=ALL-UNNAMED"
+
+      - name: Execute BDD Tests (Headless)
+        run: |
+          TAGS="${{ github.event.inputs.cucumber_tags || '@Regression' }}"
+          BROWSER="${{ github.event.inputs.browser || 'chrome' }}"
+          mvn test \
+            -P bdd-suite \
+            -Dbrowser=$BROWSER \
+            -Dheadless=true \
+            -DargLine="--enable-native-access=ALL-UNNAMED" \
+            -Dcucumber.filter.tags="$TAGS"
+
+      - name: Archive Test Results & Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-execution-reports
+          path: |
+            reports/
+            target/surefire-reports/
+            logs/
+          if-no-files-found: ignore
+
+      - name: Send Email Notification with Reports
+        if: always()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.office365.com # For Outlook/Office365 (use smtp.gmail.com for Gmail)
+          server_port: 587
+          secure: false # TLS connection over port 587
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "GitHub Actions: Cucumber BDD Test Report - ${{ job.status }} (Run #${{ github.run_number }})"
+          to: ${{ secrets.MAIL_TO }}
+          from: "GitHub Actions Automation <${{ secrets.MAIL_USERNAME }}>"
+          html_body: |
+            <!DOCTYPE html>
+            <html>
+            <head>
+              <style>
+                body { font-family: Arial, sans-serif; font-size: 14px; color: #333; line-height: 1.6; }
+                .status { padding: 10px 14px; font-weight: bold; border-radius: 4px; margin-bottom: 12px; }
+                .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+                .failure { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+                table { width: 100%; border-collapse: collapse; margin-top: 10px; max-width: 550px; }
+                th, td { border: 1px solid #ddd; padding: 8px 12px; text-align: left; }
+                th { background-color: #f7f7f7; }
+                a { color: #0066cc; text-decoration: none; }
+              </style>
+            </head>
+            <body>
+              <div class="status ${{ job.status == 'success' && 'success' || 'failure' }}">
+                Execution Status: ${{ job.status }}
+              </div>
+              <table>
+                <tr><th>Repository</th><td>${{ github.repository }}</td></tr>
+                <tr><th>Branch</th><td>${{ github.ref_name }}</td></tr>
+                <tr><th>Commit</th><td>${{ github.sha }}</td></tr>
+                <tr><th>Run Number</th><td>#${{ github.run_number }}</td></tr>
+                <tr><th>Triggered By</th><td>${{ github.actor }}</td></tr>
+              </table>
+              <p><b>Workflow Execution Link:</b><br/>
+              <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">
+                ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+              </a></p>
+              <p><i>The Extent BDD Report and TestNG Emailable Report are attached to this email.</i></p>
+            </body>
+            </html>
+          attachments: |
+            reports/ExtentCucumberReport.html
+            target/surefire-reports/emailable-report.html
