@@ -2,40 +2,49 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<groupId>com.qa.framework</groupId>
 	<artifactId>selenium-bdd-automation-framework</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<name>Selenium BDD Automation Framework</name>
-	<description>Enterprise BDD Test Automation Framework built with Java 21,
-		Selenium, Cucumber, and TestNG</description>
-	<!--  FIXME change it to the project's website  -->
+	<description>Enterprise BDD Test Automation Framework built with Java 25, Selenium, Cucumber, and TestNG</description>
 	<url>https://tutorialsninja.com/demo/</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>21</maven.compiler.source>
-		<maven.compiler.target>21</maven.compiler.target>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>25</java.version>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
+
+		<!-- Dependency Versions -->
 		<testNgVersion>7.10.2</testNgVersion>
-		<cucumberVersion>7.34.9</cucumberVersion>
-		<seleniumVersion>4.49.0</seleniumVersion>
+		<cucumberVersion>7.20.1</cucumberVersion>
+		<seleniumVersion>4.51.0</seleniumVersion>
 		<poiVersion>5.2.5</poiVersion>
-		<extentreportsCucumberVersion>3.14.0</extentreportsCucumberVersion>
+		<extentReportsVersion>5.1.2</extentReportsVersion>
+		<extentReportsCucumberAdapterVersion>1.14.0</extentReportsCucumberAdapterVersion>
 		<log4jVersion>2.24.3</log4jVersion>
+		<jacksonVersion>2.17.2</jacksonVersion>
+
+		<!-- Plugin Versions -->
 		<mavenCompilerPluginVersion>3.13.0</mavenCompilerPluginVersion>
 		<mavenSurefirePluginVersion>3.5.2</mavenSurefirePluginVersion>
 	</properties>
 
 	<dependencies>
-		<!-- Cucumber Java & TestNG -->
+		<!-- Cucumber Java, TestNG & PicoContainer -->
 		<dependency>
 			<groupId>io.cucumber</groupId>
 			<artifactId>cucumber-java</artifactId>
 			<version>${cucumberVersion}</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>io.cucumber</groupId>
 			<artifactId>cucumber-testng</artifactId>
 			<version>${cucumberVersion}</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>io.cucumber</groupId>
@@ -43,21 +52,23 @@
 			<version>${cucumberVersion}</version>
 			<scope>test</scope>
 		</dependency>
+
 		<!-- TestNG -->
 		<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>
 			<version>${testNgVersion}</version>
+			<scope>test</scope>
 		</dependency>
 
-		<!-- Selenium -->
+		<!-- Selenium Java -->
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-java</artifactId>
 			<version>${seleniumVersion}</version>
 		</dependency>
 
-		<!-- Apache POI -->
+		<!-- Apache POI for Excel Testing -->
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
@@ -73,54 +84,109 @@
 		<dependency>
 			<groupId>com.aventstack</groupId>
 			<artifactId>extentreports</artifactId>
-			<version>5.1.1</version> <!-- Use the latest stable 5.x version -->
+			<version>${extentReportsVersion}</version>
 		</dependency>
 
-		<!-- Extent Reports Cucumber Adapter (For Cucumber 7) -->
-		<!-- Source:
-		https://mvnrepository.com/artifact/tech.grasshopper/extentreports-cucumber7-adapter -->
+		<!-- Extent Reports Cucumber 7 Adapter -->
 		<dependency>
 			<groupId>tech.grasshopper</groupId>
 			<artifactId>extentreports-cucumber7-adapter</artifactId>
-			<version>1.14.0</version>
+			<version>${extentReportsCucumberAdapterVersion}</version>
+			<scope>test</scope>
 		</dependency>
 
+		<!-- Logging (Log4j2 + SLF4J) -->
+		<!-- Logging Core & SLF4J 2.x Binding -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>2.0.16</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>${log4jVersion}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
-			<version>2.20.0</version>
+			<version>${log4jVersion}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-slf4j2-impl</artifactId>
-			<version>2.20.0</version>
+			<version>${log4jVersion}</version>
 		</dependency>
+
+		<!-- Jackson for JSON Parsing -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.17.0</version>
+			<version>${jacksonVersion}</version>
 		</dependency>
 	</dependencies>
+
 	<build>
 		<plugins>
+			<!-- Compiler Plugin for Java 25 -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${mavenCompilerPluginVersion}</version>
 				<configuration>
-					<release>21</release>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>${mavenSurefirePluginVersion}</version>
-				<configuration>
-					<suiteXmlFiles>
-						<suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
-					</suiteXmlFiles>
+					<release>${java.version}</release>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<!-- Default Profile: BDD Cucumber Suite via testng.xml -->
+		<profile>
+			<id>bdd-suite</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<version>${mavenSurefirePluginVersion}</version>
+						<configuration>
+							<suiteXmlFiles>
+								<suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
+							</suiteXmlFiles>
+							<testFailureIgnore>false</testFailureIgnore>
+							<systemPropertyVariables>
+								<extent.reporter.spark.start>true</extent.reporter.spark.start>
+								<extent.reporter.spark.out>reports/ExtentCucumberReport.html</extent.reporter.spark.out>
+							</systemPropertyVariables>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<!-- Standalone TestNG Class Execution Profile -->
+		<profile>
+			<id>testng-tests</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<version>${mavenSurefirePluginVersion}</version>
+						<configuration>
+							<includes>
+								<include>**/test/*Test.java</include>
+								<include>**/runner/CucumberTestRunner.java</include>
+							</includes>
+							<testFailureIgnore>false</testFailureIgnore>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
