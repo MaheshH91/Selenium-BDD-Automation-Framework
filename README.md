@@ -1,5 +1,13 @@
 # Selenium BDD Automation Framework
 
+![Java 21](https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
+![Maven](https://img.shields.io/badge/Maven-3.x-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white)
+![Selenium](https://img.shields.io/badge/Selenium-4.49.0-43B02A?style=for-the-badge&logo=selenium&logoColor=white)
+![Cucumber](https://img.shields.io/badge/Cucumber-7.34.9-23D18B?style=for-the-badge&logo=cucumber&logoColor=white)
+![TestNG](https://img.shields.io/badge/TestNG-7.10.2-FFB703?style=for-the-badge&logo=testng&logoColor=white)
+![Jenkins](https://img.shields.io/badge/Jenkins-CI%2FCD-D24939?style=for-the-badge&logo=jenkins&logoColor=white)
+![Browsers](https://img.shields.io/badge/Browsers-Chrome%20%7C%20Firefox%20%7C%20Edge-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white)
+
 An enterprise-grade end-to-end test automation framework for scalable web application testing, built with Java 21, Selenium WebDriver, Cucumber BDD, TestNG, and Maven.
 
 This framework is designed for maintainability, scalability, parallel execution, data-driven testing, reusable Page Objects, automated failure evidence, and CI/CD integration.
