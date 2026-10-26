@@ -73,100 +73,90 @@ pipeline {
 
     post {
         always {
-            // 1. Publish Extent BDD Cucumber Report
-            publishHTML(target: [
-                allowMissing: true,
-                alwaysLinkToLastBuild: true,
-                keepAll: true,
-                reportDir: 'reports',
-                reportFiles: 'ExtentCucumberReport.html',
-                reportName: 'Extent BDD Report'
-            ])
-
-            // 2. Publish Standard TestNG Emailable Summary Report
-            publishHTML(target: [
-                allowMissing: true,
-                alwaysLinkToLastBuild: true,
-                keepAll: true,
-                reportDir: 'target/surefire-reports',
-                reportFiles: 'emailable-report.html',
-                reportName: 'TestNG Emailable Report'
-            ])
-
-            // 3. Publish Complete TestNG Index Suite Report
-            publishHTML(target: [
-                allowMissing: true,
-                alwaysLinkToLastBuild: true,
-                keepAll: true,
-                reportDir: 'target/surefire-reports',
-                reportFiles: 'index.html',
-                reportName: 'TestNG Suite Report'
-            ])
-
-            // 4. Archive Artifacts (HTML reports, execution logs, and screenshots)
-            archiveArtifacts artifacts: 'reports/**, logs/**, target/surefire-reports/**', allowEmptyArchive: true
-
-            // 5. Publish JUnit test results for trend graphs
+            // 1. Record JUnit test results first so test tokens are populated for emailext
             junit testResults: 'target/surefire-reports/*.xml', allowEmptyResults: true
 
-            // 6. Email Notification with report attachments & execution metadata
+            // 2. Archive Artifacts
+            archiveArtifacts artifacts: 'reports/**, logs/**, target/surefire-reports/**', allowEmptyArchive: true
+
+            // 3. Email Notification with Embedded Test Execution Dashboard
             emailext(
                 to: 'holkarmahesh@outlook.com',
-                subject: "[Jenkins] ${currentBuild.currentResult}: Job '${env.JOB_NAME}' (Build #${env.BUILD_NUMBER})",
-                body: """
+                subject: "Test Execution Summary - ${currentBuild.currentResult}: Job '${env.JOB_NAME}' (Build #${env.BUILD_NUMBER})",
+                body: '''
                     <!DOCTYPE html>
                     <html>
                     <head>
                         <style>
-                            body { font-family: Arial, sans-serif; font-size: 14px; color: #333; line-height: 1.6; }
-                            .status-box { padding: 12px 16px; border-radius: 4px; font-weight: bold; margin-bottom: 16px; }
-                            .SUCCESS { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-                            .FAILURE { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-                            .UNSTABLE { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
-                            table { width: 100%; max-width: 600px; border-collapse: collapse; margin-top: 10px; }
-                            th, td { padding: 8px 12px; border: 1px solid #ddd; text-align: left; }
-                            th { background-color: #f2f2f2; width: 35%; }
-                            a { color: #0066cc; text-decoration: none; }
-                            a:hover { text-decoration: underline; }
+                            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 14px; color: #333; margin: 0; padding: 20px; }
+                            .card { border: 1px solid #dadce0; border-radius: 8px; max-width: 650px; padding: 20px; background-color: #ffffff; }
+                            .banner { padding: 12px 18px; border-radius: 6px; font-weight: bold; font-size: 16px; margin-bottom: 20px; }
+                            .banner-success { background-color: #e6f4ea; color: #137333; border: 1px solid #ceead6; }
+                            .banner-failure { background-color: #fce8e6; color: #c5221f; border: 1px solid #fad2cf; }
+                            .banner-unstable { background-color: #feefc3; color: #b06000; border: 1px solid #fdd663; }
+                            .metric-table { width: 100%; border-collapse: separate; border-spacing: 8px; margin-bottom: 20px; }
+                            .metric-box { padding: 14px 10px; border-radius: 6px; text-align: center; }
+                            .metric-total { background-color: #f1f3f4; border: 1px solid #dadce0; }
+                            .metric-passed { background-color: #e6f4ea; border: 1px solid #ceead6; color: #137333; }
+                            .metric-failed { background-color: #fce8e6; border: 1px solid #fad2cf; color: #c5221f; }
+                            .metric-skipped { background-color: #feefc3; border: 1px solid #fdd663; color: #b06000; }
+                            .val { font-size: 24px; font-weight: bold; margin-bottom: 4px; }
+                            .lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+                            .details-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
+                            .details-table th, .details-table td { border: 1px solid #e1e4e8; padding: 10px 14px; text-align: left; }
+                            .details-table th { background-color: #f8f9fa; width: 35%; font-weight: 600; }
                         </style>
                     </head>
                     <body>
-                        <div class="status-box ${currentBuild.currentResult}">
-                            Build Status: ${currentBuild.currentResult}
+                        <div class="card">
+                            <div class="banner ${BUILD_STATUS == 'SUCCESS' ? 'banner-success' : (BUILD_STATUS == 'UNSTABLE' ? 'banner-unstable' : 'banner-failure')}">
+                                Build Status: ${BUILD_STATUS}
+                            </div>
+
+                            <table class="metric-table">
+                                <tr>
+                                    <td class="metric-box metric-total">
+                                        <div class="val">${TEST_COUNTS, var="total"}</div>
+                                        <div class="lbl">Total Tests</div>
+                                    </td>
+                                    <td class="metric-box metric-passed">
+                                        <div class="val">${TEST_COUNTS, var="pass"}</div>
+                                        <div class="lbl">Passed</div>
+                                    </td>
+                                    <td class="metric-box metric-failed">
+                                        <div class="val">${TEST_COUNTS, var="fail"}</div>
+                                        <div class="lbl">Failed</div>
+                                    </td>
+                                    <td class="metric-box metric-skipped">
+                                        <div class="val">${TEST_COUNTS, var="skip"}</div>
+                                        <div class="lbl">Skipped</div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <h3 style="margin: 0 0 10px 0; font-size: 14px; border-bottom: 2px solid #f1f3f4; padding-bottom: 6px;">Execution Metadata</h3>
+                            <table class="details-table">
+                                <tr><th>Job Name</th><td>${JOB_NAME}</td></tr>
+                                <tr><th>Build Number</th><td>#${BUILD_NUMBER}</td></tr>
+                                <tr><th>Execution Profile</th><td>${MAVEN_PROFILE}</td></tr>
+                                <tr><th>Browser</th><td>${BROWSER} (Headless: ${HEADLESS})</td></tr>
+                                <tr><th>Duration</th><td>${BUILD_DURATION}</td></tr>
+                            </table>
+
+                            <!-- If tests fail, show the failed scenarios table directly -->
+                            ${FAILED_TESTS}
+
+                            <p style="font-size: 12px; color: #5f6368; margin-top: 20px; line-height: 1.4;">
+                                The full interactive <b>ExtentCucumberReport.html</b> and standard <b>emailable-report.html</b> files are attached directly to this email.
+                            </p>
                         </div>
-
-                        <table>
-                            <tr><th>Job Name</th><td>${env.JOB_NAME}</td></tr>
-                            <tr><th>Build Number</th><td>#${env.BUILD_NUMBER}</td></tr>
-                            <tr><th>Maven Profile</th><td>${params.MAVEN_PROFILE ?: 'bdd-suite'}</td></tr>
-                            <tr><th>Browser</th><td>${params.BROWSER} (Headless: ${params.HEADLESS})</td></tr>
-                            <tr><th>Cucumber Tags</th><td>${params.CUCUMBER_TAGS ?: 'N/A'}</td></tr>
-                            <tr><th>Duration</th><td>${currentBuild.durationString.replace(' and counting', '')}</td></tr>
-                        </table>
-
-                        <h3>Execution Artifacts & Reports:</h3>
-                        <ul>
-                            <li><a href="${env.BUILD_URL}Extent_20BDD_20Report/">View Extent BDD HTML Report</a></li>
-                            <li><a href="${env.BUILD_URL}TestNG_20Emailable_20Report/">View TestNG Emailable Report</a></li>
-                            <li><a href="${env.BUILD_URL}testReport/">View JUnit Trend & Health Graph</a></li>
-                            <li><a href="${env.BUILD_URL}console">View Jenkins Console Output</a></li>
-                        </ul>
-                        <p><i>Note: The Extent Report and TestNG Emailable summary are also attached to this email.</i></p>
                     </body>
                     </html>
-                """,
+                ''',
                 mimeType: 'text/html',
                 attachmentsPattern: 'reports/ExtentCucumberReport.html, target/surefire-reports/emailable-report.html',
                 recipientProviders: [developers(), requestor()]
             )
-        }
-
-        success {
-            echo "All tests executed and passed under profile: '${params.MAVEN_PROFILE}'"
-        }
-
-        failure {
-            echo "Build failed. Inspect ExtentReport, TestNG reports, or console logs for details."
         }
     }
 }
