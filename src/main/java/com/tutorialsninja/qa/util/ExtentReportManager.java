@@ -1,9 +1,10 @@
-package com.tutorialsninja.qa.utils;
+package com.tutorialsninja.qa.util;
 
 import java.io.File;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
@@ -13,26 +14,31 @@ public final class ExtentReportManager {
 
     private static ExtentReports extentReports;
     private static String reportFilePath;
-    private static final ThreadLocal<ExtentTest> EXTENT_TEST = new ThreadLocal<>();
+    private static final ThreadLocal<ExtentTest> TEST_THREAD = new ThreadLocal<>();
 
     private ExtentReportManager() {}
 
     public static synchronized ExtentReports getReportInstance() {
         if (extentReports == null) {
             String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
-            reportFilePath = Paths.get(System.getProperty("user.dir"), "reports", "ExtentReport_" + timestamp + ".html").toString();
+            File reportsDir = new File(System.getProperty("user.dir") + File.separator + "reports");
+            if (!reportsDir.exists()) {
+                reportsDir.mkdirs();
+            }
 
-            ExtentSparkReporter reporter = new ExtentSparkReporter(new File(reportFilePath));
+            reportFilePath = Paths.get(reportsDir.getAbsolutePath(), "ExtentReport_" + timestamp + ".html").toString();
+
+            ExtentSparkReporter reporter = new ExtentSparkReporter(reportFilePath);
             reporter.config().setReportName("Tutorials Ninja Automation Results");
             reporter.config().setDocumentTitle("Test Execution Report");
             reporter.config().setTheme(Theme.DARK);
 
             extentReports = new ExtentReports();
             extentReports.attachReporter(reporter);
-            extentReports.setSystemInfo("URL", ConfigReader.get("url"));
-            extentReports.setSystemInfo("Browser", ConfigReader.get("browser"));
+            extentReports.setSystemInfo("URL", ConfigReader.getOrDefault("url", "N/A"));
+            extentReports.setSystemInfo("Browser", ConfigReader.getOrDefault("browser", "N/A"));
             extentReports.setSystemInfo("OS", System.getProperty("os.name"));
-            extentReports.setSystemInfo("Java", System.getProperty("java.version"));
+            extentReports.setSystemInfo("Java Version", System.getProperty("java.version"));
         }
         return extentReports;
     }
@@ -42,14 +48,14 @@ public final class ExtentReportManager {
     }
 
     public static ExtentTest getTest() {
-        return EXTENT_TEST.get();
+        return TEST_THREAD.get();
     }
 
     public static void setTest(ExtentTest test) {
-        EXTENT_TEST.set(test);
+        TEST_THREAD.set(test);
     }
 
     public static void unloadTest() {
-        EXTENT_TEST.remove();
+        TEST_THREAD.remove();
     }
 }

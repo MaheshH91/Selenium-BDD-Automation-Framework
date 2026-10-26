@@ -1,4 +1,4 @@
-package com.tutorialsninja.qa.utils;
+package com.tutorialsninja.qa.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,6 +23,16 @@ public final class JsonUtils {
 
     public static JsonNode getUserData(String filePath, String arrayName, int index) {
         JsonNode root = readJsonFile(filePath);
-        return root.get(arrayName).get(index);
+        JsonNode arrayNode = root.get(arrayName);
+
+        if (arrayNode == null || !arrayNode.isArray()) {
+            throw new IllegalArgumentException("Key '" + arrayName + "' was not found or is not an array in: " + filePath);
+        }
+
+        if (index < 0 || index >= arrayNode.size()) {
+            throw new IndexOutOfBoundsException("Index " + index + " is out of bounds for array '" + arrayName + "' (size: " + arrayNode.size() + ")");
+        }
+
+        return arrayNode.get(index);
     }
 }

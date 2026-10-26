@@ -1,4 +1,4 @@
-package com.tutorialsninja.qa.utils;
+package com.tutorialsninja.qa.util;
 
 public final class DataUtils {
     private DataUtils() {}

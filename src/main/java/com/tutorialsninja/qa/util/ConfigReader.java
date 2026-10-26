@@ -1,4 +1,4 @@
-package com.tutorialsninja.qa.utils;
+package com.tutorialsninja.qa.util;
 
 import java.io.IOException;
 import java.io.InputStream;
