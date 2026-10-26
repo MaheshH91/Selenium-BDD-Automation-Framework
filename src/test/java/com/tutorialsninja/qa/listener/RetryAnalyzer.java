@@ -1,6 +1,6 @@
-package com.tutorialsninja.qa.listeners;
+package com.tutorialsninja.qa.listener;
 
-import com.tutorialsninja.qa.utils.ConfigReader;
+import com.tutorialsninja.qa.util.ConfigReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.testng.IRetryAnalyzer;

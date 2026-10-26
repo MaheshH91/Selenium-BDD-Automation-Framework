@@ -1,15 +1,15 @@
-package com.tutorialsninja.qa.tests;
+package com.tutorialsninja.qa.test;
 
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import com.tutorialsninja.qa.base.BaseTest;
-import com.tutorialsninja.qa.pages.AccountPage;
-import com.tutorialsninja.qa.pages.HomePage;
-import com.tutorialsninja.qa.pages.LoginPage;
-import com.tutorialsninja.qa.utils.ConfigReader;
-import com.tutorialsninja.qa.utils.DataUtils;
-import com.tutorialsninja.qa.utils.ExcelUtils;
+import com.tutorialsninja.qa.page.AccountPage;
+import com.tutorialsninja.qa.page.HomePage;
+import com.tutorialsninja.qa.page.LoginPage;
+import com.tutorialsninja.qa.util.ConfigReader;
+import com.tutorialsninja.qa.util.DataUtils;
+import com.tutorialsninja.qa.util.ExcelUtils;
 
 public class LoginTest extends BaseTest {
 

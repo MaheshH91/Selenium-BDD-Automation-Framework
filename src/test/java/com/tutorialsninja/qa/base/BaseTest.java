@@ -8,8 +8,8 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
-import com.tutorialsninja.qa.drivers.DriverManager;
-import com.tutorialsninja.qa.utils.ConfigReader;
+import com.tutorialsninja.qa.driver.DriverManager;
+import com.tutorialsninja.qa.util.ConfigReader;
 
 public abstract class BaseTest {
 
@@ -36,7 +36,7 @@ public abstract class BaseTest {
         driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(ConfigReader.getInt("pageLoadTimeout")));
         driver.get(ConfigReader.get("url"));
 
-        logger.info("Initialized {} driver on thread {}", targetBrowser, Thread.currentThread().getId());
+        logger.info("Initialized {} driver on thread {}", targetBrowser, Thread.currentThread().threadId());
     }
 
     @AfterMethod(alwaysRun = true)

@@ -1,4 +1,4 @@
-package com.tutorialsninja.qa.listeners;
+package com.tutorialsninja.qa.listener;
 
 import java.awt.Desktop;
 import java.awt.GraphicsEnvironment;
@@ -25,17 +25,15 @@ public class SuiteListener implements ISuiteListener {
     }
 
     private void openCucumberReport() {
-    	// 1. Detect if running inside Jenkins or any CI runner
         boolean isCI = System.getenv("JENKINS_HOME") != null 
                     || System.getenv("CI") != null 
                     || Boolean.parseBoolean(System.getProperty("headless", "false"));
 
         if (isCI) {
-            logger.info("CI/Headless environment detected (Jenkins). Skipping desktop report auto-launch; report is archived by pipeline.");
+            logger.info("CI/Headless environment detected. Skipping desktop report auto-launch; archived via CI pipeline.");
             return;
         }
 
-        // 2. Standard local desktop verification
         try {
             if (GraphicsEnvironment.isHeadless() || !Desktop.isDesktopSupported()) {
                 logger.info("No desktop environment supported; skipping report launch.");

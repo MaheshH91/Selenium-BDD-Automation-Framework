@@ -1,7 +1,7 @@
-package com.tutorialsninja.qa.pages;
+package com.tutorialsninja.qa.page;
 
 import java.time.Duration;
-import com.tutorialsninja.qa.utils.ConfigReader;
+import com.tutorialsninja.qa.util.ConfigReader;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;

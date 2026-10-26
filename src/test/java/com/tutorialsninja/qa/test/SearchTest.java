@@ -1,11 +1,11 @@
-package com.tutorialsninja.qa.tests;
+package com.tutorialsninja.qa.test;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import com.tutorialsninja.qa.base.BaseTest;
-import com.tutorialsninja.qa.pages.HomePage;
-import com.tutorialsninja.qa.pages.SearchPage;
-import com.tutorialsninja.qa.utils.ConfigReader;
+import com.tutorialsninja.qa.page.HomePage;
+import com.tutorialsninja.qa.page.SearchPage;
+import com.tutorialsninja.qa.util.ConfigReader;
 
 public class SearchTest extends BaseTest {
 

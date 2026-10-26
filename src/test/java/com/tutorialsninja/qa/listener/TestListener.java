@@ -1,10 +1,10 @@
-package com.tutorialsninja.qa.listeners;
+package com.tutorialsninja.qa.listener;
 
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
 import com.aventstack.extentreports.Status;
-import com.tutorialsninja.qa.drivers.DriverManager;
-import com.tutorialsninja.qa.utils.ExtentReportManager;
+import com.tutorialsninja.qa.driver.DriverManager;
+import com.tutorialsninja.qa.util.ExtentReportManager;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;

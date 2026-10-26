@@ -1,13 +1,13 @@
-package com.tutorialsninja.qa.tests;
+package com.tutorialsninja.qa.test;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import com.tutorialsninja.qa.base.BaseTest;
-import com.tutorialsninja.qa.pages.AccountSuccessPage;
-import com.tutorialsninja.qa.pages.HomePage;
-import com.tutorialsninja.qa.pages.RegisterPage;
-import com.tutorialsninja.qa.utils.ConfigReader;
-import com.tutorialsninja.qa.utils.DataUtils;
+import com.tutorialsninja.qa.page.AccountSuccessPage;
+import com.tutorialsninja.qa.page.HomePage;
+import com.tutorialsninja.qa.page.RegisterPage;
+import com.tutorialsninja.qa.util.ConfigReader;
+import com.tutorialsninja.qa.util.DataUtils;
 
 public class RegisterTest extends BaseTest {
 
